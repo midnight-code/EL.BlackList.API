@@ -24,14 +24,20 @@ namespace EL.BlackList.API.Data
             modelBuilder.Entity<FeedBacks>()
                .HasOne(e => e.TaxiPools)
                .WithOne()
-               .HasForeignKey<TaxiPools>(e => e.TaxiPoolId)
+               .HasForeignKey<TaxiPools>(e => e.TaxiPoolsId)
                .IsRequired(false);
 
-            modelBuilder.Entity<FeedBacks>()
-               .HasOne(e => e.City)
-               .WithOne()
-               .HasForeignKey<City>(e => e.CityId)
-               .IsRequired(false);
+            //modelBuilder.Entity<FeedBacks>()
+            //   .HasOne(e => e.City)
+            //   .WithOne()
+            //   .HasForeignKey<City>(e => e.CityId)
+            //   .IsRequired(false);
+
+            //modelBuilder.Entity<TaxiPools>()
+            //   .HasOne(e => e.City)
+            //   .WithOne()
+            //   .HasForeignKey<City>(e => e.CityId)
+            //   .IsRequired(false);
         }
     }
 }

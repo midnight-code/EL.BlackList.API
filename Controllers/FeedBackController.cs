@@ -23,6 +23,23 @@ namespace EL.BlackList.API.Controllers
             else
                 return 0;
         }
+
+        [HttpGet("/feedBackByID/{id}", Name = "GetFeedBackByID")]
+        public ActionResult<FeedBacks> GetFeedBackByID(int id)
+        {
+            var result = _feedBackRepositore.GetFeedBackById(id);
+            if (result is not null)
+                return Ok(result);
+            else
+                return NotFound();
+        }
+
+
+
+
+
+
+
         [HttpPut("/updatefeedback/{feedbacks}")]
         public async Task<ActionResult<int>> UpdateFeedBack(FeedBacks feedbacks)
         {

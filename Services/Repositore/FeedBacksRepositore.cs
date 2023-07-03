@@ -31,7 +31,7 @@ namespace EL.BlackList.API.Services.Repositore
         /// <returns></returns>
         public FeedBacks? GetFeedBackById(int id)
         {
-            if (id > 0) { return _context.FeedBacks.Include(t => t.TaxiPools).Include(c => c.City).FirstOrDefault(p => p.FeedBackId == id); }
+            if (id > 0) { return _context.FeedBacks.Include(t => t.TaxiPools).ThenInclude(c => c.City).Include(c => c.City).FirstOrDefault(p => p.FeedBackId == id); }
             return null;
         }
 

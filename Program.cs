@@ -22,6 +22,7 @@ namespace EL.BlackList.API
 
             builder.Services.AddTransient<IDriversRepositore, DriversRepositore>();
             builder.Services.AddTransient<IFeedBacksRepositore, FeedBacksRepositore>();
+            builder.Services.AddTransient<ITaxiPoolRepositore, TaxiPoolRepositore>();
 
             var app = builder.Build();
 
