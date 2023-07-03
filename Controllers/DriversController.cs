@@ -13,7 +13,7 @@ namespace EL.BlackList.API.Controllers
         public DriversController(IDriversRepositore driversRepositore) => _driversRepositore = driversRepositore;
 
 
-        [HttpGet, Route("/GetSerch/{firstName}")]
+        [HttpGet, Route("/GetSerch/{firstName}", Name = "GetDriversByName")]
         public ActionResult<IEnumerable<Drivers>>? GetDriversByName(string firstName, string? lastName, string? secondName, DateTime? dateTime)
         {
             var result = _driversRepositore.GetDriverByName(firstName, lastName, secondName, dateTime);
@@ -21,7 +21,7 @@ namespace EL.BlackList.API.Controllers
                 return Ok(result);
             else return NotFound();
         }
-        [HttpGet, Route("/dateRogden/{dateRogden}")]
+        [HttpGet, Route("/dateRogden/{dateRogden}", Name = "GetDriversByDate")]
         public ActionResult<IEnumerable<Drivers>>? GetDriversByDate(DateTime? dateRogden)
         {
             var result = _driversRepositore.GetDriverByDate(dateRogden);
@@ -39,7 +39,7 @@ namespace EL.BlackList.API.Controllers
                 return NotFound();
         }
 
-        [HttpPost("/savedriver/{driverModels}")]
+        [HttpPost("/savedriver/{driverModels}", Name = "SaveDriver")]
         public ActionResult<int> SaveDriver(Drivers driverModels)
         {
             if (driverModels is not null)
@@ -49,7 +49,7 @@ namespace EL.BlackList.API.Controllers
             else
                 return 0;
         }
-        [HttpPut("/updatedriver/{driverModels}")]
+        [HttpPut("/updatedriver/{driverModels}", Name = "UpdateDriverModels")]
         public ActionResult<int> UpdateDriverModels(Drivers drivers)
         {
             if (drivers is not null)

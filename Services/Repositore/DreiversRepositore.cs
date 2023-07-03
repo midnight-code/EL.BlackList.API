@@ -71,7 +71,6 @@ namespace EL.BlackList.API.Services.Repositore
         {
             if (id > 0)
             {
-                //var test = _context.Drivers.FirstOrDefault(d => d.DriverId == id);
                 var result = _context.Drivers.Include(d => d.FeedBacks).ThenInclude(f => f.TaxiPools).ThenInclude(t => t.City).Include(fb => fb.FeedBacks).ThenInclude(c => c.City).FirstOrDefault(d => d.DriverId == id);
                 return result;
             }

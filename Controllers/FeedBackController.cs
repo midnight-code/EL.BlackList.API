@@ -12,18 +12,6 @@ namespace EL.BlackList.API.Controllers
         private readonly IFeedBacksRepositore _feedBackRepositore;
         public FeedBackController(IFeedBacksRepositore feedBackRepositore) => _feedBackRepositore = feedBackRepositore;
 
-
-        [HttpPost("/savefeedbacks/{feedbacks}")]
-        public async Task<ActionResult<int>> SaveFeedBack(FeedBacks feedbacks)
-        {
-            if (feedbacks is not null)
-            {
-                return await _feedBackRepositore.SaveFeedBackAsync(feedbacks);
-            }
-            else
-                return 0;
-        }
-
         [HttpGet("/feedBackByID/{id}", Name = "GetFeedBackByID")]
         public ActionResult<FeedBacks> GetFeedBackByID(int id)
         {
@@ -35,12 +23,18 @@ namespace EL.BlackList.API.Controllers
         }
 
 
+        [HttpPost("/savefeedbacks/{feedbacks}", Name = "SaveFeedBack")]
+        public async Task<ActionResult<int>> SaveFeedBack(FeedBacks feedbacks)
+        {
+            if (feedbacks is not null)
+            {
+                return await _feedBackRepositore.SaveFeedBackAsync(feedbacks);
+            }
+            else
+                return 0;
+        }
 
-
-
-
-
-        [HttpPut("/updatefeedback/{feedbacks}")]
+        [HttpPut("/updatefeedback/{feedbacks}", Name = "UpdateFeedBack")]
         public async Task<ActionResult<int>> UpdateFeedBack(FeedBacks feedbacks)
         {
             if (feedbacks is not null)
