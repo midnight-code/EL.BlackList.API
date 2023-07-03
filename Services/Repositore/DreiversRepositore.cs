@@ -71,7 +71,11 @@ namespace EL.BlackList.API.Services.Repositore
         {
             if (id > 0)
             {
-                var result = _context.Drivers.Include(d => d.FeedBacks).ThenInclude(f => f.TaxiPools).ThenInclude(t => t.City).Include(fb => fb.FeedBacks).ThenInclude(c => c.City).FirstOrDefault(d => d.DriverId == id);
+                var result = _context.Drivers.Include(d => d.FeedBacks)
+                    .Include(f => f.TaxiPools).ThenInclude(t => t.City)
+                    .Include(f => f.FeedBacks).ThenInclude(c => c.City)
+                    .Include(r => r.FeedBacks).ThenInclude(f => f.TaxiPools)
+                    .FirstOrDefault(d => d.Id == id);
                 return result;
             }
             return null;
@@ -86,7 +90,7 @@ namespace EL.BlackList.API.Services.Repositore
         {
             if (drivers is not null)
             {
-                if (drivers.DriverId > 0)
+                if (drivers.Id > 0)
                 {
                     if (_context.Drivers.Contains(drivers) == true)
                         _context.Drivers.Update(drivers);
@@ -96,7 +100,7 @@ namespace EL.BlackList.API.Services.Repositore
                     _context.Drivers.Add(drivers);
 
                 _context.SaveChanges();
-                return drivers.DriverId;
+                return drivers.Id;
             }
             else
                 return 0;
@@ -109,7 +113,7 @@ namespace EL.BlackList.API.Services.Repositore
         /// <returns></returns>
         public async Task<bool> DeleteDriver(int id)
         {
-            Drivers? result = await _context.Drivers.FirstOrDefaultAsync(d => d.DriverId == id);
+            Drivers? result = await _context.Drivers.FirstOrDefaultAsync(d => d.Id == id);
             if (result is not null)
             {
                 _context.Drivers.Remove(result);

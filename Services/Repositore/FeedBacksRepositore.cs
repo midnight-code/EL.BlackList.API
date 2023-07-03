@@ -18,7 +18,7 @@ namespace EL.BlackList.API.Services.Repositore
         {
             if (driverid > 0)
             {
-                return _context.FeedBacks.Include(t => t.TaxiPools).Include(c => c.City).Where(p => p.DriverId == driverid);
+                return _context.FeedBacks.Include(t => t.TaxiPools).Include(c => c.City).Where(p => p.DriversId == driverid);
             }
             return null;
 

@@ -57,7 +57,7 @@ namespace EL.BlackList.API.Services.Repositore
         /// <returns></returns>
         public async Task<bool> DeleteTaxiPool(int id)
         {
-            TaxiPools? result = await _context.TaxiPools.FirstOrDefaultAsync(d => d.DriverId == id);
+            TaxiPools? result = await _context.TaxiPools.FirstOrDefaultAsync(d => d.TaxiPoolsId == id);
             if (result is not null)
             {
                 _context.TaxiPools.Remove(result);

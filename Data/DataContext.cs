@@ -15,29 +15,29 @@ namespace EL.BlackList.API.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Drivers>()
-                .HasMany(e => e.FeedBacks)
-                .WithOne()
-                .HasForeignKey(e => e.DriverId)
-                .IsRequired(false);
+            //modelBuilder.Entity<Drivers>()
+            //    .HasMany(e => e.FeedBacks)
+            //    .WithOne()
+            //    .HasForeignKey(e => e.DriverId)
+            //    .IsRequired();
 
-            modelBuilder.Entity<FeedBacks>()
-               .HasOne(e => e.TaxiPools)
-               .WithOne()
-               .HasForeignKey<TaxiPools>(e => e.TaxiPoolsId)
-               .IsRequired(false);
+            //modelBuilder.Entity<FeedBacks>()
+            //   .HasOne(e => e.TaxiPools)
+            //   .WithOne()
+            //   .HasForeignKey<TaxiPools>(e => e.TaxiPoolsId)
+            //   .IsRequired();
 
             //modelBuilder.Entity<FeedBacks>()
             //   .HasOne(e => e.City)
             //   .WithOne()
             //   .HasForeignKey<City>(e => e.CityId)
-            //   .IsRequired(false);
+            //   .IsRequired();
 
             //modelBuilder.Entity<TaxiPools>()
             //   .HasOne(e => e.City)
             //   .WithOne()
             //   .HasForeignKey<City>(e => e.CityId)
-            //   .IsRequired(false);
+            //   .IsRequired();
         }
     }
 }

@@ -35,8 +35,8 @@ namespace EL.BlackList.API.Controllers
             else
                 return 0;
         }
-        [HttpPut("/updatetaxipool/{taxipools}", Name = "UpdateDriverModels")]
-        public ActionResult<int> UpdateDriverModels(TaxiPools taxipools)
+        [HttpPut("/updatetaxipool/{taxipools}", Name = "UpdateTaxiPool")]
+        public ActionResult<int> UpdateTaxiPool(TaxiPools taxipools)
         {
             if (taxipools is not null)
                 return _taxiPoolRepositore.SaveTaxiPool(taxipools);

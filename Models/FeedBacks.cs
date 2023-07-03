@@ -7,7 +7,7 @@ namespace EL.BlackList.API.Models
     public class FeedBacks
     {
         [Key, Column("id")] public int FeedBackId { get; set; }
-        [Column("id_driver")] public int DriverId { get; set; }
+        [Column("id_driver")] public int DriversId { get; set; }
         [Column("id_taxpool")] public int TaxiPoolsId { get; set; }
         [Column("subjest")] public string Subjest { get; set; } = string.Empty;
         [Column("dateadd")] public DateTime AddDate { get; set; }
