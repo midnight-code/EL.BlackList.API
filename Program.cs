@@ -23,8 +23,12 @@ namespace EL.BlackList.API
 
             builder.Services.AddDbContext<DataContext>(opt => opt.UseSqlServer
                (builder.Configuration.GetConnectionString("CommanderConnection")));
+
             builder.Services.AddScoped<IDriversRepositore, DriversRepositore>();
             builder.Services.AddScoped<IDriversServices, DriversServices>();    
+
+            builder.Services.AddScoped<IFeedBacksRepositore, FeedBacksRepositore>();
+            builder.Services.AddScoped<IFeedBackServices, FeedBackServices>();
 
             //builder.Services.AddTransient<IDriversRepositore, DriversRepositore>();
             //builder.Services.AddTransient<IFeedBacksRepositore, FeedBacksRepositore>();

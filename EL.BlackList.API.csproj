@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Compile Remove="Repositore\Repositore\IDriversRepositore.cs" />
+    <Compile Remove="Repositore\Repositore\IFeedBacksRepositore.cs" />
   </ItemGroup>
 
   <ItemGroup>

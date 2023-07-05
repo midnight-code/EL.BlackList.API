@@ -7,12 +7,12 @@ namespace EL.BlackList.API.Services.Response
         public string Description { get; set; } = string.Empty;
         public StatusCode StatusCode { get; set; }
 
-        public T Data { get; set; }
+        public T? Data { get; set; }
 
     }
 
     public interface IBaseResponse<T>
     {
-        T Data { get; }
+        T? Data { get; }
     }
 }

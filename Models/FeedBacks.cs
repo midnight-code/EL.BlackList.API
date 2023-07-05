@@ -12,7 +12,7 @@ namespace EL.BlackList.API.Models
         [Column("subjest")] public string Subjest { get; set; } = string.Empty;
         [Column("dateadd")] public DateTime AddDate { get; set; }
         [Column("id_city")] public int CityId { get; set; }
-        [Column("id_user")] public string UserGuid { get; set; } = string.Empty;
+        [Column("id_user")] public string? UserGuid { get; set; }
 
         public TaxiPools? TaxiPools { get; set; }
         public City? City { get; set; } 

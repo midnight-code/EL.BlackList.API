@@ -7,6 +7,6 @@ namespace EL.BlackList.API.Repositore.Interfaces
         Task<bool> Delete(int id);
         Task<IEnumerable<T>> Select();
         Task<T?> GetById(int id);
-        Task<int> Save(T drivers);
+        Task<int> Save(T intite);
     }
 }

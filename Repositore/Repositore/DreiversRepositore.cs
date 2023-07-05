@@ -77,21 +77,21 @@ namespace EL.BlackList.API.Services.Repositore
                 return null;
         }
 
-        public async Task<int> Save(Drivers drivers)
+        public async Task<int> Save(Drivers intite)
         {
-            if (drivers is not null)
+            if (intite is not null)
             {
-                if (drivers.Id > 0)
+                if (intite.Id > 0)
                 {
-                    if (await _context.Drivers.ContainsAsync(drivers) == true)
-                        _context.Drivers.Update(drivers);
+                    if (await _context.Drivers.ContainsAsync(intite) == true)
+                        _context.Drivers.Update(intite);
                 }
 
                 else
-                    await _context.Drivers.AddAsync(drivers);
+                    await _context.Drivers.AddAsync(intite);
 
                 await _context.SaveChangesAsync();
-                return await Task.Run(() => drivers.Id);
+                return await Task.Run(() => intite.Id);
             }
             else
                 return 0;

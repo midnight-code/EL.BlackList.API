@@ -3,6 +3,7 @@
     public enum StatusCode
     {
         OK = 200,
-        InternalServverErroe = 500
+        InternalServverErroe = 500,
+        DeleteServiceError = 300
     }
 }
