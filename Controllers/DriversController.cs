@@ -1,4 +1,5 @@
 ﻿using EL.BlackList.API.Models;
+using EL.BlackList.API.Services.Interfaces;
 using EL.BlackList.API.Services.Repositore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,30 +10,30 @@ namespace EL.BlackList.API.Controllers
     [ApiController]
     public class DriversController : ControllerBase
     {
-        private readonly IDriversRepositore _driversRepositore;
-        public DriversController(IDriversRepositore driversRepositore) => _driversRepositore = driversRepositore;
-
+        private readonly IDriversServices _driversServices;
+        public DriversController(IDriversServices driversServices) => _driversServices = driversServices;
 
         [HttpGet, Route("/GetSerch/{firstName}", Name = "GetDriversByName")]
-        public ActionResult<IEnumerable<Drivers>>? GetDriversByName(string firstName, string? lastName, string? secondName, DateTime? dateTime)
+        public async Task<ActionResult<IEnumerable<Drivers>>?> GetDriversByName(string firstName, string? lastName, string? secondName, DateTime? dateTime)
         {
-            var result = _driversRepositore.GetDriverByName(firstName, lastName, secondName, dateTime);
+            var result = await _driversServices.GetDriversByNameAsync(firstName, lastName, secondName, dateTime);
             if (result is not null)
                 return Ok(result);
             else return NotFound();
         }
+
         [HttpGet, Route("/dateRogden/{dateRogden}", Name = "GetDriversByDate")]
-        public ActionResult<IEnumerable<Drivers>>? GetDriversByDate(DateTime? dateRogden)
+        public async Task<ActionResult<IEnumerable<Drivers>>?> GetDriversByDate(DateTime? dateRogden)
         {
-            var result = _driversRepositore.GetDriverByDate(dateRogden);
+            var result = await _driversServices.GetDriversByDateAsync(dateRogden);
             if (result is not null) return Ok(result);
             else return NotFound();
         }
 
         [HttpGet("/driverByID/{id}", Name = "GetDriverByID")]
-        public ActionResult<Drivers> GetDriverByID(int id)
+        public async Task<ActionResult<Drivers>> GetDriverByID(int id)
         {
-            var result = _driversRepositore.GetDriversId(id);
+            var result = await _driversServices.GetDrivreByIdAsync(id);
             if (result is not null)
                 return Ok(result);
             else
@@ -40,20 +41,20 @@ namespace EL.BlackList.API.Controllers
         }
 
         [HttpPost("/savedriver/{driverModels}", Name = "SaveDriver")]
-        public ActionResult<int> SaveDriver(Drivers driverModels)
+        public async Task<ActionResult<int>> SaveDriver(Drivers driverModels)
         {
             if (driverModels is not null)
             {
-                return _driversRepositore.SaveDriver(driverModels);
+                return Ok(await _driversServices.SaveDriverAsync(driverModels));
             }
             else
                 return 0;
         }
         [HttpPut("/updatedriver/{driverModels}", Name = "UpdateDriverModels")]
-        public ActionResult<int> UpdateDriverModels(Drivers drivers)
+        public async Task<ActionResult<int>> UpdateDriverModels(Drivers drivers)
         {
             if (drivers is not null)
-                return _driversRepositore.SaveDriver(drivers);
+                return Ok(await _driversServices.SaveDriverAsync(drivers));
             else
                 return NotFound();
 
@@ -62,10 +63,9 @@ namespace EL.BlackList.API.Controllers
         [HttpDelete("/deldriver/{id}", Name = "DeleteDriverID")]
         public async Task<ActionResult<bool>> DeleteDriverID(int id)
         {
-            if (id>0)
+            if (id > 0)
             {
-                var result = await _driversRepositore.DeleteDriver(id);
-                return result;
+                return Ok(await _driversServices.DeleteDriverBAsync(id));
             }
             return BadRequest();
         }

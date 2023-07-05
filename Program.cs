@@ -1,4 +1,8 @@
 using EL.BlackList.API.Data;
+using EL.BlackList.API.Repositore.Interfaces;
+using EL.BlackList.API.Repositore.Repositore;
+using EL.BlackList.API.Services.Implementations;
+using EL.BlackList.API.Services.Interfaces;
 using EL.BlackList.API.Services.Repositore;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,10 +23,12 @@ namespace EL.BlackList.API
 
             builder.Services.AddDbContext<DataContext>(opt => opt.UseSqlServer
                (builder.Configuration.GetConnectionString("CommanderConnection")));
+            builder.Services.AddScoped<IDriversRepositore, DriversRepositore>();
+            builder.Services.AddScoped<IDriversServices, DriversServices>();    
 
-            builder.Services.AddTransient<IDriversRepositore, DriversRepositore>();
-            builder.Services.AddTransient<IFeedBacksRepositore, FeedBacksRepositore>();
-            builder.Services.AddTransient<ITaxiPoolRepositore, TaxiPoolRepositore>();
+            //builder.Services.AddTransient<IDriversRepositore, DriversRepositore>();
+            //builder.Services.AddTransient<IFeedBacksRepositore, FeedBacksRepositore>();
+            //builder.Services.AddTransient<ITaxiPoolRepositore, TaxiPoolRepositore>();
 
             var app = builder.Build();
 
