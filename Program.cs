@@ -30,6 +30,12 @@ namespace EL.BlackList.API
             builder.Services.AddScoped<IFeedBacksRepositore, FeedBacksRepositore>();
             builder.Services.AddScoped<IFeedBackServices, FeedBackServices>();
 
+            builder.Services.AddScoped<ICityRepositore, CityRepositore>();
+            builder.Services.AddScoped<ICityServices, CityServices>();
+
+            builder.Services.AddScoped<ITaxiPoolRepositore, TaxiPoolRepositore>();
+            builder.Services.AddScoped<ITaxiPoolServices, TaxiPoolServices>();
+
             //builder.Services.AddTransient<IDriversRepositore, DriversRepositore>();
             //builder.Services.AddTransient<IFeedBacksRepositore, FeedBacksRepositore>();
             //builder.Services.AddTransient<ITaxiPoolRepositore, TaxiPoolRepositore>();

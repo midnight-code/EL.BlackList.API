@@ -1,5 +1,6 @@
 ﻿using EL.BlackList.API.Data;
 using EL.BlackList.API.Models;
+using EL.BlackList.API.Repositore.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace EL.BlackList.API.Services.Repositore
@@ -9,65 +10,51 @@ namespace EL.BlackList.API.Services.Repositore
         private readonly DataContext _context;
         public TaxiPoolRepositore(DataContext context) => _context = context;
 
-
-        /// <summary>
-        /// Получаем данные по выбранному таксопарку
-        /// </summary>
-        /// <param name="id">Идентификатор таксопарка</param>
-        /// <returns></returns>
-        public TaxiPools? GetTaxiPoolById(int id)
-        {
-            if (id > 0)
-            {
-                var result = _context.TaxiPools.Include(c => c.City).FirstOrDefault(t => t.TaxiPoolsId == id);
-                return result;
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Сохраняет или обновляет название таксопарка в базе
-        /// </summary>
-        /// <param name="drivers">Таксопарк</param>
-        /// <returns></returns>
-        public int SaveTaxiPool(TaxiPools taxiPools)
-        {
-            if (taxiPools is not null)
-            {
-                if (taxiPools.TaxiPoolsId > 0)
-                {
-                    if (_context.TaxiPools.Contains(taxiPools) == true)
-                        _context.TaxiPools.Update(taxiPools);
-                }
-
-                else
-                    _context.TaxiPools.Add(taxiPools);
-
-                _context.SaveChanges();
-                return taxiPools.TaxiPoolsId;
-            }
-            else
-                return 0;
-        }
-
-        /// <summary>
-        /// Удаляет выбранный таксопарк из базы
-        /// </summary>
-        /// <param name="id">Идентификатор таксопарка</param>
-        /// <returns></returns>
-        public async Task<bool> DeleteTaxiPool(int id)
+        public async Task<bool> Delete(int id)
         {
             TaxiPools? result = await _context.TaxiPools.FirstOrDefaultAsync(d => d.TaxiPoolsId == id);
             if (result is not null)
             {
                 _context.TaxiPools.Remove(result);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return await Task.Run(() => true);
             }
             else
                 return await Task.Run(() => false);
-
         }
 
+        public Task<IEnumerable<TaxiPools>> Select()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<TaxiPools?> GetById(int id)
+        {
+            if (id > 0)
+            {
+                var result = await _context.TaxiPools.Include(c => c.City).FirstOrDefaultAsync(t => t.TaxiPoolsId == id);
+                return await Task.Run(() => result);
+            }
+            return null;
+        }
+
+        public async Task<int> Save(TaxiPools intite)
+        {
+            if (intite is not null)
+            {
+                if (intite.TaxiPoolsId > 0)
+                {
+                    if (await _context.TaxiPools.ContainsAsync(intite) == true)
+                        _context.TaxiPools.Update(intite);
+                }
+                else
+                    await _context.TaxiPools.AddAsync(intite);
+
+                await _context.SaveChangesAsync();
+                return await Task.Run(() => intite.TaxiPoolsId);
+            }
+            else
+                return await Task.Run(() => 0);
+        }
     }
 }
