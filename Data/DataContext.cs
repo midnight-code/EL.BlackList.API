@@ -11,6 +11,7 @@ namespace EL.BlackList.API.Data
         public DbSet<FeedBacks> FeedBacks { get; set; }
         public DbSet<City> Citys { get; set; }
         public DbSet<TaxiPools> TaxiPools { get; set; }
+        public DbSet<Documents> Documents { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

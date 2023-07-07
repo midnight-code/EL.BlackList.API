@@ -36,6 +36,9 @@ namespace EL.BlackList.API
             builder.Services.AddScoped<ITaxiPoolRepositore, TaxiPoolRepositore>();
             builder.Services.AddScoped<ITaxiPoolServices, TaxiPoolServices>();
 
+            builder.Services.AddScoped<IDocumentRepositore, DocumentsRepositore>();
+            builder.Services.AddScoped<IDocumentsService, DocumentsServices>();
+
             //builder.Services.AddTransient<IDriversRepositore, DriversRepositore>();
             //builder.Services.AddTransient<IFeedBacksRepositore, FeedBacksRepositore>();
             //builder.Services.AddTransient<ITaxiPoolRepositore, TaxiPoolRepositore>();
