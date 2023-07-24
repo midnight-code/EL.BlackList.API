@@ -24,20 +24,7 @@ namespace EL.BlackList.API
             builder.Services.AddDbContext<DataContext>(opt => opt.UseSqlServer
                (builder.Configuration.GetConnectionString("CommanderConnection")));
 
-            builder.Services.AddScoped<IDriversRepositore, DriversRepositore>();
-            builder.Services.AddScoped<IDriversServices, DriversServices>();    
-
-            builder.Services.AddScoped<IFeedBacksRepositore, FeedBacksRepositore>();
-            builder.Services.AddScoped<IFeedBackServices, FeedBackServices>();
-
-            builder.Services.AddScoped<ICityRepositore, CityRepositore>();
-            builder.Services.AddScoped<ICityServices, CityServices>();
-
-            builder.Services.AddScoped<ITaxiPoolRepositore, TaxiPoolRepositore>();
-            builder.Services.AddScoped<ITaxiPoolServices, TaxiPoolServices>();
-
-            builder.Services.AddScoped<IDocumentRepositore, DocumentsRepositore>();
-            builder.Services.AddScoped<IDocumentsService, DocumentsServices>();
+            InitDevDi(builder);
 
             //builder.Services.AddTransient<IDriversRepositore, DriversRepositore>();
             //builder.Services.AddTransient<IFeedBacksRepositore, FeedBacksRepositore>();
@@ -60,6 +47,24 @@ namespace EL.BlackList.API
             app.MapControllers();
 
             app.Run();
+
+            static void InitDevDi(WebApplicationBuilder builder)
+            {
+                builder.Services.AddScoped<IDriversRepositore, DriversRepositore>();
+                builder.Services.AddScoped<IDriversServices, DriversServices>();
+
+                builder.Services.AddScoped<IFeedBacksRepositore, FeedBacksRepositore>();
+                builder.Services.AddScoped<IFeedBackServices, FeedBackServices>();
+
+                builder.Services.AddScoped<ICityRepositore, CityRepositore>();
+                builder.Services.AddScoped<ICityServices, CityServices>();
+
+                builder.Services.AddScoped<ITaxiPoolRepositore, TaxiPoolRepositore>();
+                builder.Services.AddScoped<ITaxiPoolServices, TaxiPoolServices>();
+
+                builder.Services.AddScoped<IDocumentRepositore, DocumentsRepositore>();
+                builder.Services.AddScoped<IDocumentsService, DocumentsServices>();
+            }
         }
     }
 }

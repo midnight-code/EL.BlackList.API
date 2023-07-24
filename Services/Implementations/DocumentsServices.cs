@@ -3,6 +3,14 @@ using EL.BlackList.API.Models;
 using EL.BlackList.API.Repositore.Interfaces;
 using EL.BlackList.API.Services.Interfaces;
 using EL.BlackList.API.Services.Response;
+using System.Security.Cryptography;
+using System.Text;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Png;
+using System.IO;
+using System.Reflection.Metadata;
 
 namespace EL.BlackList.API.Services.Implementations
 {
@@ -55,17 +63,22 @@ namespace EL.BlackList.API.Services.Implementations
             if(file is not null)
             {
                 int idDocument = 0;
-                string da = Guid.NewGuid().ToString("N");
-                string fileName = $"{da}.{file.FileName.Split('.')[1]}";
-                //var httpReqest = httpContext.Request;
+                string decoder = file.FileName.Split('.')[1];
+
+                MD5 md5hash = MD5.Create();
+                byte[] inputBytes = Encoding.ASCII.GetBytes(file.Name);
+                byte[] hashBytes = md5hash.ComputeHash(inputBytes);
+                string hash = Convert.ToHexString(hashBytes);
+                string fileName = $"{hash.Substring(0, 7)}.{decoder}";
+
                 var rootPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Uploades", "Documents");
                 if (!Directory.Exists(rootPath))
                     Directory.CreateDirectory(rootPath);
                 var path = Path.Combine(rootPath, fileName);
+                var path_mini = Path.Combine(rootPath, $"mini_{fileName}");
 
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
-
                     var document = new Documents()
                     {
                         FileName = fileName,
@@ -73,10 +86,9 @@ namespace EL.BlackList.API.Services.Implementations
                         FileSize = file.Length
                     };
                     await file.CopyToAsync(stream);
-                    var path2 = Path.Combine(rootPath, $"mini_{file.FileName}");
-                    //MiniImage(stream, path2);
                     idDocument = await _documentRepositore.Save(document);
                 }
+                await UploadAndResizeImage(path, path_mini, 400, 400, decoder);
                 return await Task.Run(() => new BaseResponse<int>()
                 {
                     Data = idDocument,
@@ -89,10 +101,25 @@ namespace EL.BlackList.API.Services.Implementations
                 Description = $"Not Found"
             });
         }
-
-        private void MiniImage(FileStream file, string rootPath)
+        public async Task UploadAndResizeImage(string fileStream, string filename, int newWidth, int newHeight, string decoder)
         {
-           
+            using (Image image = await Image.LoadAsync(fileStream))
+            {
+                int aspectWidth = newWidth;
+                int aspectHeight = newHeight;
+
+                if (image.Width / (image.Height / (float)newHeight) > newWidth)
+                    aspectHeight = (int)(image.Height / (image.Width / (float)newWidth));
+                else
+                    aspectWidth = (int)(image.Width / (image.Height / (float)newHeight));
+
+                int height = image.Height / 2;
+                image.Mutate(x => x.Resize(aspectWidth, aspectHeight, KnownResamplers.Lanczos3));
+                if (decoder == "png")
+                    await image.SaveAsPngAsync(filename, new PngEncoder());
+                else
+                    await image.SaveAsJpegAsync(filename, new JpegEncoder() { Quality = 75 });
+            }
         }
     }
 }
