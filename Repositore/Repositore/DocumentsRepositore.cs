@@ -33,6 +33,29 @@ namespace EL.BlackList.API.Repositore.Repositore
             return null;
         }
 
+        public async Task<Documents?> GetDocumentByDriverIDAsync(int driverID, string imgType)
+        {
+            if (driverID > 0)
+            {
+                var uuu= await _dataContext.Documents.Where(id => (id.DriverID == driverID && id.ImgType == imgType)).FirstOrDefaultAsync();
+                return await _dataContext.Documents.Where(id => (id.DriverID == driverID && id.ImgType == imgType)).FirstOrDefaultAsync();
+            }
+            return null;
+        }
+
+        public async Task<IEnumerable<Documents>?> GetListDocumentByDriverIDAsync(int driverID, string imgType)
+        {
+            if (driverID > 0)
+            {
+                return await Task.Run(() => _dataContext.Documents.Where(id => (id.DriverID == driverID && id.ImgType == imgType)));
+            }
+            return await Task.Run(() =>
+            {
+                List<Documents> enumerable = new();
+                return enumerable;
+            });
+        }
+
         public async Task<int> Save(Documents intite)
         {
             if (intite is not null)

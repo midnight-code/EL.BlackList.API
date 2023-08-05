@@ -41,6 +41,23 @@ namespace EL.BlackList.API.Services.Implementations
             });
         }
 
+        public async Task<IBaseResponse<Documents>> GetDocumentByDriverIdAsync(int id, string imgType)
+        {
+            if (id > 0)
+            {
+                var result = await _documentRepositore.GetDocumentByDriverIDAsync(id, imgType);
+                return await Task.Run(() => new BaseResponse<Documents>()
+                {
+                    Data = result,
+                    StatusCode = StatusCode.OK
+                });
+            }
+            return await Task.Run(() => new BaseResponse<Documents>()
+            {
+                Description = $"Not Found"
+            });
+        }
+
         public async Task<IBaseResponse<Documents>> GetDocumentByIdAsync(int id)
         {
             if (id > 0)
@@ -58,32 +75,48 @@ namespace EL.BlackList.API.Services.Implementations
             });
         }
 
-        public async Task<IBaseResponse<int>> SaveDocumentAsync(IFormFile file, HttpRequest httpReqest)
+        public async Task<IBaseResponse<IEnumerable<Documents>>> GetListDocumentByDriverIdAsync(int id, string imgType)
+        {
+            if (id > 0)
+            {
+                var result = await _documentRepositore.GetListDocumentByDriverIDAsync(id, imgType);
+                return await Task.Run(() => new BaseResponse<IEnumerable<Documents>>()
+                {
+                    Data = result,
+                    StatusCode = StatusCode.OK
+                });
+            }
+            return await Task.Run(() => new BaseResponse<IEnumerable<Documents>>()
+            {
+                Description = $"Not Found"
+            });
+        }
+
+        public async Task<IBaseResponse<int>> SaveDocumentAsync(IFormFile file, HttpRequest httpReqest, int driverid, string imgtypes)
         {
             if(file is not null)
             {
                 int idDocument = 0;
                 string decoder = file.FileName.Split('.')[1];
 
-                MD5 md5hash = MD5.Create();
-                byte[] inputBytes = Encoding.ASCII.GetBytes(file.Name);
-                byte[] hashBytes = md5hash.ComputeHash(inputBytes);
-                string hash = Convert.ToHexString(hashBytes);
-                string fileName = $"{hash.Substring(0, 7)}.{decoder}";
+                Guid guid = Guid.NewGuid();
+
+                string fileName = $"bl_{guid.ToString().Substring(0, 8)}_{guid.ToString().Substring(24, 12)}.{decoder}";
 
                 var rootPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Uploades", "Documents");
                 if (!Directory.Exists(rootPath))
                     Directory.CreateDirectory(rootPath);
                 var path = Path.Combine(rootPath, fileName);
                 var path_mini = Path.Combine(rootPath, $"mini_{fileName}");
-
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
                     var document = new Documents()
                     {
                         FileName = fileName,
                         ContentType = file.ContentType,
-                        FileSize = file.Length
+                        FileSize = file.Length,
+                        DriverID = driverid,
+                        ImgType = imgtypes
                     };
                     await file.CopyToAsync(stream);
                     idDocument = await _documentRepositore.Save(document);
