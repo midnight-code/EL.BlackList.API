@@ -4,6 +4,7 @@
     {
         OK = 200,
         InternalServverErroe = 500,
-        DeleteServiceError = 300
+        DeleteServiceError = 300,
+        Status404NotFound=400
     }
 }

@@ -1,10 +1,16 @@
 using EL.BlackList.API.Data;
+using EL.BlackList.API.IdentityAuth;
 using EL.BlackList.API.Repositore.Interfaces;
 using EL.BlackList.API.Repositore.Repositore;
 using EL.BlackList.API.Services.Implementations;
 using EL.BlackList.API.Services.Interfaces;
 using EL.BlackList.API.Services.Repositore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 
 namespace EL.BlackList.API
 {
@@ -13,6 +19,7 @@ namespace EL.BlackList.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            ConfigurationManager configuration = builder.Configuration;
 
             // Add services to the container.
 
@@ -21,14 +28,88 @@ namespace EL.BlackList.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "JWTAuht", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Enter 'Bearer'[space] and then you valid token in the text input below.\r\n\r\nExaple: \"Bearer agfasgsdgsdghsthshsghsrth\"",
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference =new OpenApiReference
+                            {
+                                Type =ReferenceType.SecurityScheme,
+                                Id="Bearer"
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
+            });
+
             builder.Services.AddDbContext<DataContext>(opt => opt.UseSqlServer
                (builder.Configuration.GetConnectionString("CommanderConnection")));
+            builder.Services.AddDbContext<IdentitysDbContext>(opt => opt.UseSqlServer
+               (builder.Configuration.GetConnectionString("CommanderConnection")));
+
+
+            builder.Services.AddIdentity<AppUser, IdentityRole>(option =>
+            {
+                option.SignIn.RequireConfirmedEmail = false;
+                option.SignIn.RequireConfirmedPhoneNumber = false;
+                option.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789-._@+";
+                option.Password.RequireDigit = true;
+                option.Password.RequiredLength = 6;
+                option.Password.RequireLowercase = true;
+                option.Password.RequireNonAlphanumeric = true;
+                option.Password.RequireUppercase = true;
+            })
+               .AddEntityFrameworkStores<IdentitysDbContext>()
+               .AddDefaultTokenProviders();
+            builder.Services.AddAuthentication(option =>
+            {
+                option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            })
+                .AddJwtBearer(option =>
+                {
+                    option.SaveToken = true;
+                    option.RequireHttpsMetadata = false;
+                    option.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                    {
+                        // указывает, будет ли валидироваться издатель при валидации токена
+                        ValidateIssuer = true,
+
+                        // будет ли валидироваться потребитель токена
+                        ValidateAudience = true,
+
+                        // будет ли валидироваться время существования
+                        ValidateLifetime = true,
+
+                        // строка, представляющая издателя
+                        ValidIssuer = configuration["JWT:ValidIssuer"],
+
+                        // установка потребителя токена
+                        ValidAudience = configuration["JWT:ValidAudience"],
+
+                        // валидация ключа безопасности
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:SecretKey"]))
+                    };
+                });
+
 
             InitDevDi(builder);
-
-            //builder.Services.AddTransient<IDriversRepositore, DriversRepositore>();
-            //builder.Services.AddTransient<IFeedBacksRepositore, FeedBacksRepositore>();
-            //builder.Services.AddTransient<ITaxiPoolRepositore, TaxiPoolRepositore>();
 
             var app = builder.Build();
 
@@ -64,6 +145,9 @@ namespace EL.BlackList.API
 
                 builder.Services.AddScoped<IDocumentRepositore, DocumentsRepositore>();
                 builder.Services.AddScoped<IDocumentsService, DocumentsServices>();
+
+                builder.Services.AddScoped<IAuthenticationUserServices, AuthenticationUserServices>();
+
             }
         }
     }

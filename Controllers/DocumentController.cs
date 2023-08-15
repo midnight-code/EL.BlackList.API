@@ -36,8 +36,8 @@ namespace EL.BlackList.API.Controllers
             {
                 document = await _documentsService.GetDocumentByIdAsync(1);
             }
-            var rootPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Uploades", "Documents", $"{document.Data.FileName}");
-            string contentType;
+            var rootPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Uploades", "Documents", $"{document?.Data?.FileName}");
+            string? contentType = string.Empty;
             bool i = provider.TryGetContentType(rootPath, out contentType);
             if (!provider.TryGetContentType(rootPath, out contentType))
             {
@@ -50,7 +50,7 @@ namespace EL.BlackList.API.Controllers
             }
             else
                 return NotFound();
-            return File(filebyte, contentType, document.Data.FileName);
+            return File(filebyte, contentType, document?.Data?.FileName);
         }
 
         [HttpPost("/Document/DownloadDocument/{id}", Name ="DownloadDocument")]
@@ -62,8 +62,8 @@ namespace EL.BlackList.API.Controllers
             {
                 document = await _documentsService.GetDocumentByIdAsync(1);
             }
-            var rootPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Uploades", "Documents", $"{document.Data.FileName}");
-            string contentType;
+            var rootPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Uploades", "Documents", $"{document?.Data?.FileName}");
+            string? contentType;
             bool i = provider.TryGetContentType(rootPath, out contentType);
             if (!provider.TryGetContentType(rootPath, out contentType))
             {
@@ -76,10 +76,10 @@ namespace EL.BlackList.API.Controllers
             }
             else
                 return NotFound();
-            return File(filebyte, contentType, document.Data.FileName);
+            return File(filebyte, contentType, document?.Data?.FileName);
         }
 
-        [HttpPost("/Document/UploadeDocument", Name = "UploadeDocument")]
+        [HttpPost("/Document/UploadeDocument/{driverid}/{imgtypes}", Name = "UploadeDocument")]
         public async Task<ActionResult> UploadeDocument(IFormFile file, int driverid, string imgtypes)
         {
             var httpReqest = HttpContext.Request;
