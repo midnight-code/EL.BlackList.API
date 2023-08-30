@@ -39,7 +39,7 @@ namespace EL.BlackList.API.Services.Implementations
             {
                 UserName = model.UserName,
                 Email = model.Email,
-                SecurityStamp = Guid.NewGuid().ToString()
+                SecurityStamp = Guid.NewGuid().ToString(),
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);

@@ -146,6 +146,9 @@ namespace EL.BlackList.API
                 builder.Services.AddScoped<IDocumentRepositore, DocumentsRepositore>();
                 builder.Services.AddScoped<IDocumentsService, DocumentsServices>();
 
+                builder.Services.AddScoped<IUserBaseRepositore, UserBaseRepositore>();
+                builder.Services.AddScoped<IUserBaseService, UserBaseService>();
+
                 builder.Services.AddScoped<IAuthenticationUserServices, AuthenticationUserServices>();
 
             }

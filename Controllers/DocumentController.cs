@@ -1,10 +1,12 @@
 ﻿using EL.BlackList.API.Models;
 using EL.BlackList.API.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 
 namespace EL.BlackList.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DocumentController : ControllerBase
